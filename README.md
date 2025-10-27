@@ -2,6 +2,12 @@
 
 A comprehensive AI-powered solution for healthcare clinics to reduce no-shows, automate reminders, and gain real-time booking insights while ensuring patient data privacy and compliance.
 
+## 🌐 **Live Demo - Easy Access**
+
+**[🚀 View Interactive Demo](https://raw.githubusercontent.com/DanielDemoz/ai-booking-optimization/main/brukd_easy_demo.html)** - No technical setup required! Just click and explore.
+
+*Perfect for presentations, client demos, and non-technical users. Works on all devices and browsers.*
+
 ## 🏥 About BRUKD Consultancy
 
 BRUKD Consultancy specializes in AI-enhanced healthcare solutions that help clinics optimize their appointment management systems. Our AI-Enhanced Booking Optimization System uses machine learning to predict patient no-shows and automate communication workflows.
@@ -208,8 +214,6 @@ BRUKD Consultancy is a leading provider of AI-enhanced healthcare solutions. We 
 
 - **Website**: [www.brukdconsultancy.com](https://www.brukdconsultancy.com)
 - **Email**: info@brukdconsultancy.com
-- **Phone**: +1 (613) 555-BRUKD
-- **Address**: 123 Healthcare Drive, Ottawa, ON K1A 0A6
 
 ## 🙏 Acknowledgments
 
