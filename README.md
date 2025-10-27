@@ -4,7 +4,7 @@ A comprehensive AI-powered solution for healthcare clinics to reduce no-shows, a
 
 ## 🌐 **Live Demo - Easy Access**
 
-**[🚀 View Interactive Demo](https://raw.githubusercontent.com/DanielDemoz/ai-booking-optimization/main/brukd_easy_demo.html)** - No technical setup required! Just click and explore.
+**[🚀 View Interactive Demo](https://danieldemoz.github.io/ai-booking-optimization/)** - No technical setup required! Just click and explore.
 
 *Perfect for presentations, client demos, and non-technical users. Works on all devices and browsers.*
 
