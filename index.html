@@ -742,8 +742,81 @@
 
         // Analytics functions
         function loadAnalytics() {
-            // Analytics charts would be loaded here
-            console.log('Analytics loaded');
+            // Initialize analytics charts
+            initializeAnalyticsCharts();
+        }
+
+        function initializeAnalyticsCharts() {
+            // Analytics Chart 1 - Patient Demographics
+            const analyticsCtx1 = document.getElementById('analyticsChart1').getContext('2d');
+            new Chart(analyticsCtx1, {
+                type: 'bar',
+                data: {
+                    labels: ['18-25', '26-35', '36-45', '46-55', '56-65', '65+'],
+                    datasets: [{
+                        label: 'Patients by Age Group',
+                        data: [45, 78, 92, 67, 43, 28],
+                        backgroundColor: [
+                            '#007bff',
+                            '#28a745',
+                            '#ffc107',
+                            '#dc3545',
+                            '#6f42c1',
+                            '#fd7e14'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Patient Demographics by Age'
+                        }
+                    }
+                }
+            });
+
+            // Analytics Chart 2 - Appointment Types Distribution
+            const analyticsCtx2 = document.getElementById('analyticsChart2').getContext('2d');
+            new Chart(analyticsCtx2, {
+                type: 'pie',
+                data: {
+                    labels: ['Consultation', 'Follow-up', 'Treatment', 'Emergency', 'Checkup'],
+                    datasets: [{
+                        data: [35, 28, 20, 8, 9],
+                        backgroundColor: [
+                            '#007bff',
+                            '#28a745',
+                            '#ffc107',
+                            '#dc3545',
+                            '#6f42c1'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Appointment Types Distribution'
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
         }
 
         // Privacy functions
