@@ -315,6 +315,133 @@
                     </div>
                 </div>
 
+                <!-- Patients Content -->
+                <div id="patients-content" style="display: none;">
+                    <div class="card dashboard-card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5><i class="fas fa-users me-2"></i>Patient Management</h5>
+                            <button class="btn btn-primary" onclick="showNewPatientModal()">
+                                <i class="fas fa-plus"></i> New Patient
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Patient ID</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Last Visit</th>
+                                            <th>Risk Level</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="patients-table">
+                                        <tr>
+                                            <td>P001</td>
+                                            <td><strong>Sarah Johnson</strong></td>
+                                            <td>sarah.johnson@email.com</td>
+                                            <td>(555) 123-4567</td>
+                                            <td>2024-01-10</td>
+                                            <td><span class="badge bg-danger">High Risk</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary" onclick="editPatient(1)">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-info" onclick="viewPatientHistory(1)">
+                                                    <i class="fas fa-history"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>P002</td>
+                                            <td><strong>Michael Chen</strong></td>
+                                            <td>michael.chen@email.com</td>
+                                            <td>(555) 234-5678</td>
+                                            <td>2024-01-12</td>
+                                            <td><span class="badge bg-danger">High Risk</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary" onclick="editPatient(2)">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-info" onclick="viewPatientHistory(2)">
+                                                    <i class="fas fa-history"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>P003</td>
+                                            <td><strong>Emily Rodriguez</strong></td>
+                                            <td>emily.rodriguez@email.com</td>
+                                            <td>(555) 345-6789</td>
+                                            <td>2024-01-08</td>
+                                            <td><span class="badge bg-danger">High Risk</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary" onclick="editPatient(3)">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-info" onclick="viewPatientHistory(3)">
+                                                    <i class="fas fa-history"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>P004</td>
+                                            <td><strong>David Thompson</strong></td>
+                                            <td>david.thompson@email.com</td>
+                                            <td>(555) 456-7890</td>
+                                            <td>2024-01-14</td>
+                                            <td><span class="badge bg-warning">Medium Risk</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary" onclick="editPatient(4)">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-info" onclick="viewPatientHistory(4)">
+                                                    <i class="fas fa-history"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>P005</td>
+                                            <td><strong>John Smith</strong></td>
+                                            <td>john.smith@email.com</td>
+                                            <td>(555) 567-8901</td>
+                                            <td>2024-01-15</td>
+                                            <td><span class="badge bg-success">Low Risk</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary" onclick="editPatient(5)">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-info" onclick="viewPatientHistory(5)">
+                                                    <i class="fas fa-history"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>P006</td>
+                                            <td><strong>Jane Doe</strong></td>
+                                            <td>jane.doe@email.com</td>
+                                            <td>(555) 678-9012</td>
+                                            <td>2024-01-13</td>
+                                            <td><span class="badge bg-warning">Medium Risk</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary" onclick="editPatient(6)">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-info" onclick="viewPatientHistory(6)">
+                                                    <i class="fas fa-history"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- AI Predictions Content -->
                 <div id="predictions-content" style="display: none;">
                     <div class="card dashboard-card">
@@ -578,6 +705,9 @@
                     case 'appointments':
                         loadAppointments();
                         break;
+                    case 'patients':
+                        loadPatients();
+                        break;
                     case 'predictions':
                         loadPredictions();
                         break;
@@ -646,6 +776,24 @@
                     }
                 }
             });
+        }
+
+        // Patient functions
+        function loadPatients() {
+            // Patients are already loaded in HTML
+            console.log('Patients loaded');
+        }
+
+        function showNewPatientModal() {
+            alert('New Patient Modal - This would open a form to add a new patient in the full system.');
+        }
+
+        function editPatient(id) {
+            alert(`Edit Patient ${id} - This would open an edit form for the patient in the full system.`);
+        }
+
+        function viewPatientHistory(id) {
+            alert(`View Patient History ${id} - This would show the complete medical history and appointment records for the patient.`);
         }
 
         // Appointment functions
