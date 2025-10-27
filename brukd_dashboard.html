@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRUKD Consultancy - AI Booking Optimization Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --brukd-primary: #2c3e50;
+            --brukd-secondary: #3498db;
+            --brukd-accent: #e74c3c;
+            --brukd-success: #27ae60;
+            --brukd-warning: #f39c12;
+            --brukd-light: #ecf0f1;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+
+        .navbar {
+            background: var(--brukd-primary) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            overflow: hidden;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, var(--brukd-secondary) 0%, var(--brukd-primary) 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .risk-high { 
+            border-left: 5px solid var(--brukd-accent);
+            background: linear-gradient(90deg, rgba(231, 76, 60, 0.1) 0%, white 100%);
+        }
+        
+        .risk-medium { 
+            border-left: 5px solid var(--brukd-warning);
+            background: linear-gradient(90deg, rgba(243, 156, 18, 0.1) 0%, white 100%);
+        }
+        
+        .risk-low { 
+            border-left: 5px solid var(--brukd-success);
+            background: linear-gradient(90deg, rgba(39, 174, 96, 0.1) 0%, white 100%);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            padding: 1rem;
+        }
+
+        .sidebar {
+            background: var(--brukd-primary);
+            min-height: 100vh;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-link {
+            color: #ecf0f1;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 5px 10px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: rgba(52, 152, 219, 0.2);
+            color: white;
+            border-color: var(--brukd-secondary);
+            transform: translateX(5px);
+        }
+
+        .nav-link.active {
+            background: var(--brukd-secondary);
+            color: white;
+            border-color: var(--brukd-secondary);
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            margin: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .welcome-header {
+            background: linear-gradient(135deg, var(--brukd-primary) 0%, var(--brukd-secondary) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .alert-custom {
+            border-radius: 15px;
+            border: none;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn-brukd {
+            background: linear-gradient(135deg, var(--brukd-secondary) 0%, var(--brukd-primary) 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-brukd:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+            color: white;
+        }
+
+        .table-custom {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .table-custom thead {
+            background: var(--brukd-primary);
+            color: white;
+        }
+
+        .table-custom tbody tr {
+            transition: background-color 0.3s ease;
+        }
+
+        .table-custom tbody tr:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        .badge-custom {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .footer {
+            background: var(--brukd-primary);
+            color: white;
+            padding: 2rem;
+            margin-top: 3rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .feature-highlight {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(44, 62, 80, 0.1) 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1rem 0;
+            border-left: 5px solid var(--brukd-secondary);
+        }
+
+        .ai-insight {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.1) 0%, rgba(243, 156, 18, 0.1) 100%);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 5px solid var(--brukd-accent);
+        }
+
+        .ai-insight h6 {
+            color: var(--brukd-accent);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .ai-insight .insight-item {
+            display: flex;
+            align-items: center;
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+        }
+
+        .ai-insight .insight-item i {
+            margin-right: 10px;
+            color: var(--brukd-accent);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-hospital"></i> BRUKD Consultancy
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text">
+                    <i class="fas fa-user-md"></i> AI-Enhanced Booking System
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 sidebar">
+                <div class="p-3">
+                    <h4 class="text-white mb-4">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </h4>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#dashboard">
+                                <i class="fas fa-chart-line"></i> Overview
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#appointments">
+                                <i class="fas fa-calendar-alt"></i> Appointments
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#patients">
+                                <i class="fas fa-users"></i> Patients
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#ai-insights">
+                                <i class="fas fa-brain"></i> AI Insights
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#reminders">
+                                <i class="fas fa-bell"></i> Reminders
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#analytics">
+                                <i class="fas fa-chart-pie"></i> Analytics
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#compliance">
+                                <i class="fas fa-shield-alt"></i> Compliance
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 col-lg-10">
+                <div class="main-content">
+                    <!-- Welcome Header -->
+                    <div class="welcome-header">
+                        <h1 class="welcome-title">Welcome to BRUKD Consultancy</h1>
+                        <p class="welcome-subtitle">AI-Enhanced Booking Optimization Dashboard</p>
+                    </div>
+
+                    <!-- Dashboard Overview -->
+                    <div id="dashboard-content">
+                        <!-- Key Metrics -->
+                        <div class="stats-grid">
+                            <div class="metric-card">
+                                <div class="metric-value" id="total-appointments">374</div>
+                                <div class="metric-label">Total Appointments</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value" id="upcoming-appointments">150</div>
+                                <div class="metric-label">Upcoming</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value" id="no-show-rate">12.3%</div>
+                                <div class="metric-label">No-Show Rate</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value" id="high-risk-appointments">23</div>
+                                <div class="metric-label">High Risk</div>
+                            </div>
+                        </div>
+
+                        <!-- AI Insights -->
+                        <div class="ai-insight">
+                            <h6><i class="fas fa-robot"></i> AI-Powered Insights</h6>
+                            <div class="insight-item">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span><strong>23 high-risk appointments</strong> identified for next week - recommend proactive outreach</span>
+                            </div>
+                            <div class="insight-item">
+                                <i class="fas fa-trending-down"></i>
+                                <span><strong>No-show rate decreased by 8%</strong> this month compared to last month</span>
+                            </div>
+                            <div class="insight-item">
+                                <i class="fas fa-clock"></i>
+                                <span><strong>Peak cancellation time:</strong> 2-4 hours before appointment (67% of cancellations)</span>
+                            </div>
+                            <div class="insight-item">
+                                <i class="fas fa-calendar-week"></i>
+                                <span><strong>Best appointment times:</strong> Tuesday-Thursday, 10 AM - 2 PM (lowest no-show rate)</span>
+                            </div>
+                        </div>
+
+                        <!-- Charts Row -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="dashboard-card">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5><i class="fas fa-chart-pie me-2"></i>Appointment Status Distribution</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-container">
+                                            <canvas id="statusChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="dashboard-card">
+                                    <div class="card-header bg-success text-white">
+                                        <h5><i class="fas fa-chart-line me-2"></i>No-Show Trends</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-container">
+                                            <canvas id="trendsChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- High Risk Appointments -->
+                        <div class="dashboard-card">
+                            <div class="card-header bg-danger text-white">
+                                <h5><i class="fas fa-exclamation-triangle me-2"></i>High Risk Appointments Requiring Attention</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-custom">
+                                        <thead>
+                                            <tr>
+                                                <th>Patient</th>
+                                                <th>Appointment Time</th>
+                                                <th>Type</th>
+                                                <th>Risk Level</th>
+                                                <th>Probability</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="high-risk-table">
+                                            <tr class="risk-high">
+                                                <td><strong>Sarah Johnson</strong></td>
+                                                <td>Mon, Jan 15, 2024 at 2:00 PM</td>
+                                                <td>Follow-up</td>
+                                                <td><span class="badge bg-danger badge-custom">High Risk</span></td>
+                                                <td>34%</td>
+                                                <td>
+                                                    <button class="btn btn-warning btn-sm me-2" onclick="sendReminder(1)">
+                                                        <i class="fas fa-bell"></i> Send Reminder
+                                                    </button>
+                                                    <button class="btn btn-info btn-sm" onclick="callPatient(1)">
+                                                        <i class="fas fa-phone"></i> Call
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr class="risk-high">
+                                                <td><strong>Michael Chen</strong></td>
+                                                <td>Tue, Jan 16, 2024 at 10:30 AM</td>
+                                                <td>Consultation</td>
+                                                <td><span class="badge bg-danger badge-custom">High Risk</span></td>
+                                                <td>28%</td>
+                                                <td>
+                                                    <button class="btn btn-warning btn-sm me-2" onclick="sendReminder(2)">
+                                                        <i class="fas fa-bell"></i> Send Reminder
+                                                    </button>
+                                                    <button class="btn btn-info btn-sm" onclick="callPatient(2)">
+                                                        <i class="fas fa-phone"></i> Call
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr class="risk-high">
+                                                <td><strong>Emily Rodriguez</strong></td>
+                                                <td>Wed, Jan 17, 2024 at 3:15 PM</td>
+                                                <td>Treatment</td>
+                                                <td><span class="badge bg-danger badge-custom">High Risk</span></td>
+                                                <td>31%</td>
+                                                <td>
+                                                    <button class="btn btn-warning btn-sm me-2" onclick="sendReminder(3)">
+                                                        <i class="fas fa-bell"></i> Send Reminder
+                                                    </button>
+                                                    <button class="btn btn-info btn-sm" onclick="callPatient(3)">
+                                                        <i class="fas fa-phone"></i> Call
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Feature Highlights -->
+                        <div class="row mt-4">
+                            <div class="col-md-4">
+                                <div class="feature-highlight">
+                                    <h6><i class="fas fa-brain text-primary"></i> AI Predictions</h6>
+                                    <p>Machine learning algorithms analyze patient patterns to predict no-show probability with 87% accuracy.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="feature-highlight">
+                                    <h6><i class="fas fa-bell text-warning"></i> Smart Reminders</h6>
+                                    <p>Automated multi-channel reminders (SMS, email, chat) reduce no-shows by up to 40%.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="feature-highlight">
+                                    <h6><i class="fas fa-shield-alt text-success"></i> Privacy Compliant</h6>
+                                    <p>PIPEDA-compliant data handling with complete audit trails and consent management.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="footer">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-hospital"></i> BRUKD Consultancy</h6>
+                            <p>AI-Enhanced Healthcare Solutions</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-info-circle"></i> System Status</h6>
+                            <p><i class="fas fa-circle text-success"></i> All systems operational</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize charts when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            setupNavigation();
+            startRealTimeUpdates();
+        });
+
+        // Navigation
+        function setupNavigation() {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Show corresponding content
+                    const target = this.getAttribute('href').substring(1);
+                    showContent(target);
+                });
+            });
+        }
+
+        function showContent(contentId) {
+            // For now, just show dashboard content
+            // In a full implementation, this would switch between different views
+            console.log('Showing content:', contentId);
+        }
+
+        // Initialize charts
+        function initializeCharts() {
+            // Status Chart
+            const statusCtx = document.getElementById('statusChart').getContext('2d');
+            new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed', 'Scheduled', 'No-Show', 'Cancelled'],
+                    datasets: [{
+                        data: [180, 150, 23, 21],
+                        backgroundColor: ['#27ae60', '#3498db', '#e74c3c', '#f39c12'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Trends Chart
+            const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+            new Chart(trendsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'No-Show Rate (%)',
+                        data: [15.2, 14.8, 13.5, 12.9, 12.1, 11.8, 12.3, 11.9, 11.5, 11.2, 10.8, 12.3],
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 20,
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Real-time updates simulation
+        function startRealTimeUpdates() {
+            setInterval(() => {
+                // Simulate real-time data updates
+                updateMetrics();
+            }, 30000); // Update every 30 seconds
+        }
+
+        function updateMetrics() {
+            // Simulate slight variations in metrics
+            const totalAppointments = document.getElementById('total-appointments');
+            const upcomingAppointments = document.getElementById('upcoming-appointments');
+            const noShowRate = document.getElementById('no-show-rate');
+            const highRiskAppointments = document.getElementById('high-risk-appointments');
+
+            // Add subtle animations
+            totalAppointments.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                totalAppointments.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        // Action functions
+        function sendReminder(appointmentId) {
+            // Simulate sending reminder
+            const button = event.target.closest('button');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<span class="loading-spinner"></span> Sending...';
+            button.disabled = true;
+
+            setTimeout(() => {
+                button.innerHTML = '<i class="fas fa-check"></i> Sent';
+                button.classList.remove('btn-warning');
+                button.classList.add('btn-success');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('btn-success');
+                    button.classList.add('btn-warning');
+                    button.disabled = false;
+                }, 2000);
+            }, 1500);
+        }
+
+        function callPatient(patientId) {
+            // Simulate calling patient
+            const button = event.target.closest('button');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<span class="loading-spinner"></span> Calling...';
+            button.disabled = true;
+
+            setTimeout(() => {
+                button.innerHTML = '<i class="fas fa-check"></i> Called';
+                button.classList.remove('btn-info');
+                button.classList.add('btn-success');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('btn-success');
+                    button.classList.add('btn-info');
+                    button.disabled = false;
+                }, 2000);
+            }, 2000);
+        }
+
+        // Add some interactive effects
+        document.querySelectorAll('.metric-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
