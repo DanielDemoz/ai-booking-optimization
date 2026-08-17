@@ -40,4 +40,4 @@ Tests: `python -m pytest tests/`
 
 **Static interactive demo:** https://danieldemoz.github.io/ai-booking-optimization/
 
-Built by BRUKD Consultancy for healthcare clinic booking optimization.
+Built by Daniel S. Demoz for healthcare clinic booking optimization.

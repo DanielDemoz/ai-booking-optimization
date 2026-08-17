@@ -1,5 +1,5 @@
 """
-Simple HTTP Server for BRUKD Consultancy Dashboard
+Simple HTTP Server for AI Booking Optimization Dashboard
 Serves the static HTML dashboard without Flask dependencies
 """
 
@@ -34,7 +34,7 @@ def start_brukd_server(port=8080):
     """Start the BRUKD dashboard server"""
     
     print("=" * 60)
-    print("BRUKD Consultancy - AI Booking Optimization Dashboard")
+    print("Daniel S. Demoz - AI Booking Optimization Dashboard")
     print("=" * 60)
     print(f"Starting server on port {port}...")
     
@@ -48,7 +48,7 @@ def start_brukd_server(port=8080):
             print("   • Real-time Analytics Dashboard")
             print("   • Automated Reminder System")
             print("   • PIPEDA Compliance Features")
-            print("   • BRUKD Consultancy Branding")
+            print("   • DD Demo Branding")
             print("")
             print("Press Ctrl+C to stop the server")
             print("=" * 60)
