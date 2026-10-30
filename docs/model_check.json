@@ -1,0 +1,8 @@
+{
+ "rows": 1000,
+ "no_show_rate": 0.108,
+ "majority_accuracy": 0.892,
+ "accuracy": 0.838,
+ "auc": 0.481,
+ "recall": 0.046
+}

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clinic Booking and Reminders | Daniel S. Demoz</title>
+  <meta name="description" content="A clinic appointment and reminder system with privacy controls, and an honest check of its no-show model.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://www.danieldemoz.com/kit/rai.css">
+</head>
+<body>
+  <div class="rai-top"><div class="wrap">
+    <span>Daniel S. Demoz · Responsible AI in practice</span>
+    <span><a href="https://www.danieldemoz.com/projects">All projects</a> &nbsp;·&nbsp; <a href="https://github.com/DanielDemoz/ai-booking-optimization">Code</a></span>
+  </div></div>
+
+  <header class="rai-hero"><div class="wrap">
+    <p class="eyebrow">Clinic booking and reminders</p>
+    <h1>A clinic booking system with privacy built in, and a no-show model that needs real data</h1>
+    <p class="lead">A Flask application for clinic appointments, risk-based reminders, consent and audit logging. This page shows what works today and what does not yet.</p>
+    <div class="chips">
+      <span class="chip status">Working app · model not ready</span>
+      <span class="chip">Flask + SQLite</span>
+      <span class="chip">Consent and audit log</span>
+      <span class="chip">PIPEDA-minded design</span>
+    </div>
+  </div></header>
+
+  <nav class="steps" aria-label="Sections"><div class="wrap">
+    <a href="#system"><b>1</b>The system</a>
+    <a href="#model"><b>2</b>The model</a>
+    <a href="#privacy"><b>3</b>Privacy</a>
+    <a href="#framework"><b>4</b>Reliable AI checklist</a>
+  </div></nav>
+
+  <main>
+    <section id="system"><div class="wrap">
+      <h2>What the system does</h2>
+      <p class="sub">A Flask and SQLAlchemy application for clinic appointments.</p>
+      <div class="grid g2" style="margin-top:18px"><div class="card"><h3>Appointments</h3><p>Patients, clinics and appointments in SQLite, with a dashboard and a REST API.</p></div><div class="card"><h3>No-show risk</h3><p>A random forest scores each appointment Low, Medium or High risk.</p></div><div class="card"><h3>Reminders</h3><p>SMS and email reminders through Twilio and SendGrid, scheduled by risk level.</p></div><div class="card"><h3>Privacy controls</h3><p>Consent records, field encryption (Fernet), retention rules and an audit log of every access.</p></div></div>
+    </div></section>
+    <section id="model" style="background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><div class="wrap">
+      <h2>How good is the no-show model?</h2>
+      <p class="sub">With no real appointment history, the app trains on 1,000 generated appointments. This is how the model scores on them (5-fold cross-validation).</p>
+      <div class="grid g2" style="margin-top:18px"><div class="card" style="overflow-x:auto"><table class="t"><tr><th>Measure</th><th>Value</th></tr><tr><td>No-show rate in the generated data</td><td>10.8%</td></tr><tr><td>Accuracy of always guessing "will attend"</td><td>89.2%</td></tr><tr><td>Model accuracy</td><td>83.8%</td></tr><tr class="hl"><td>Model AUC (0.5 is random)</td><td>0.48</td></tr><tr><td>Share of no-shows the model catches</td><td>5%</td></tr></table></div><div class="card"><h3>What this means</h3><ul style="margin:0;padding-left:18px"><li>The model is no better than a coin toss on this data, and less accurate than always guessing that patients attend.</li><li>The generated no-show signal is very weak, so there is little for any model to learn.</li><li>The earlier demo showed 87.2% accuracy and a 94.2% reminder success rate. Those were typed into the page, not measured, and were removed.</li></ul></div></div>
+      <div class="note warn"><b>Honest finding:</b> the software works, but the prediction does not yet. It needs real, consented appointment history from a clinic before any risk score can be trusted.</div>
+    </div></section>
+    <section id="privacy"><div class="wrap">
+      <h2>Privacy by design</h2>
+      <p class="sub">Health appointments are sensitive. The design follows PIPEDA principles. It has not had a legal review.</p>
+      <div class="grid g2" style="margin-top:18px"><div class="card"><h3>In the code</h3><ul style="margin:0;padding-left:18px"><li>Consent is recorded per patient before reminders are sent.</li><li>Contact fields can be encrypted at rest with a key from the environment.</li><li>Every read and change is written to an audit log.</li><li>Retention settings mark old records for deletion.</li><li>A privacy impact assessment is in <code>docs/privacy_impact_assessment.md</code>.</li></ul></div><div class="card"><h3>Before a real clinic uses it</h3><ul style="margin:0;padding-left:18px"><li>Have the privacy impact assessment reviewed for the clinic's province. Some provinces have their own health privacy laws.</li><li>Train only on real history, test on a later period, and check results by patient group.</li><li>Never use a risk score to refuse or double-book care. Use it only to choose who gets an extra reminder.</li><li>Keep message content free of health details.</li></ul></div></div>
+    </div></section>
+    <section id="framework" style="background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><div class="wrap">
+      <h2>Reliable AI checklist</h2>
+      <p class="sub">The six questions of the <a href="https://www.danieldemoz.com/#method">Reliable AI Adoption Framework</a>, answered for this project.</p>
+      <div class="fw" style="margin-top:18px">
+        <div class="card"><h3>Business problem</h3><p>Reduce missed appointments with timely reminders, without treating any patient worse.</p></div>
+        <div class="card"><h3>Data readiness</h3><p>No real appointment history yet. The model trains on generated data, and its scores reflect that.</p></div>
+        <div class="card"><h3>Governance and risk</h3><p>Health information under PIPEDA and provincial laws. Consent, encryption, audit and retention are built in.</p></div>
+        <div class="card"><h3>Technology and tools</h3><p>Flask, SQLAlchemy and a random forest. Simple enough for a clinic's IT provider to run and inspect.</p></div>
+        <div class="card"><h3>People and adoption</h3><p>Front-desk staff see the risk level and decide on extra contact. The score never blocks a booking.</p></div>
+        <div class="card"><h3>Outcomes and monitoring</h3><p>With real data, track no-show rates for reminded and not-reminded patients, by group.</p></div>
+      </div>
+    </div></section>
+
+  </main>
+
+  <footer class="rai-foot"><div class="wrap">
+    <span>Built by Daniel S. Demoz · <a href="https://www.danieldemoz.com">danieldemoz.com</a></span>
+    <span>No real patient data is used or stored in this project</span>
+  </div></footer>
+
+</body>
+</html>

@@ -255,8 +255,8 @@
                                         <div class="card-body">
                                             <h6>Model Information</h6>
                                             <p><strong>Status:</strong> <span id="model-status">Active</span></p>
-                                            <p><strong>Accuracy:</strong> <span id="model-accuracy">85.2%</span></p>
-                                            <p><strong>Last Trained:</strong> <span id="model-last-trained">2024-01-10</span></p>
+                                            <p><strong>Accuracy:</strong> <span id="model-accuracy">not measured (model trains on generated data)</span></p>
+                                            <p><strong>Last Trained:</strong> <span id="model-last-trained">–</span></p>
                                             <button class="btn btn-sm btn-outline-primary" onclick="retrainModel()">
                                                 <i class="fas fa-sync"></i> Retrain Model
                                             </button>
@@ -642,11 +642,11 @@
         // Reminder functions
         async function loadReminders() {
             try {
-                // This would fetch reminder statistics
-                document.getElementById('total-reminders').textContent = '1,234';
-                document.getElementById('success-rate').textContent = '94.2%';
-                document.getElementById('scheduled-reminders').textContent = '45';
-                document.getElementById('failed-reminders').textContent = '23';
+                // Reminder statistics are not wired to the API yet, so none are shown.
+                ['total-reminders', 'success-rate', 'scheduled-reminders', 'failed-reminders'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = '–';
+                });
 
             } catch (error) {
                 console.error('Error loading reminders:', error);
